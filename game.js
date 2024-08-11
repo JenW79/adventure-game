@@ -11,6 +11,7 @@ import worldData from './world-data.js';
 const gameWorld = new World();
 let player;
 
+// Modify the startGame function to work with HTML inputs
 function startGame() {
     document.getElementById('input').addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
@@ -18,48 +19,42 @@ function startGame() {
             event.target.value = '';
         }
     });
-
-    document.getElementById('submit-button').addEventListener('click', function() {
-        const inputField = document.getElementById('input');
-        processCommand(inputField.value);
-        inputField.value = '';
-    });
-
+    
     // Set up combat buttons
-    document.getElementById('attack-button').addEventListener('click', attackEnemy);
-    document.getElementById('run-button').addEventListener('click', runAway);
+    document.getElementById('attack-button').addEventListener('click', () => attackEnemy());
+    document.getElementById('run-button').addEventListener('click', () => runAway());
 
     // Initialize game world and player
     gameWorld.loadWorld(worldData);
     player = new Player('Player', gameWorld.rooms[1]);
     gameWorld.setPlayer(player);
 
+    // Create enemies
     const goblin = new Enemy('Goblin', 'A sneaky goblin', gameWorld.rooms[3]);
     goblin.setPlayer(player);
     goblin.act();
     gameWorld.rooms[3].addEnemy(goblin);
 
+    // Print initial room
     player.currentRoom.printRoom();
+
+    // Show initial game instructions
     printHelp();
 }
 
+
+// Make the startGame function available globally
 window.startGame = startGame;
 
-
+// Modify this function to display the help text in the HTML output
 function printHelp() {
     outputText("Controls:");
-    outputText("  Type 'l' to look around");
-    outputText("  Type 'i' to check your inventory");
-    outputText("  Type 'health' to check your health");
-    outputText("  Type 'take <item>' to take an item");
-    outputText("  Type 'drop <item>' to drop an item");
-    outputText("  Type 'eat <item>' to eat a food item");
-    outputText("  Type 'n', 's', 'e', 'w' to move");
-    outputText("  Use buttons to 'hit <enemy>' to attack an enemy or run away");
+    outputText("  Use the navigation buttons to move around");
+    outputText("  Use the action buttons to interact with the environment");
     outputText("  Type 'q' to quit");
 }
 
-
+// Modify processCommand function to work with HTML inputs
 function processCommand(input) {
     const cmd = input.toLowerCase().trim();
     const parts = cmd.split(/\s+/);
@@ -72,7 +67,6 @@ function processCommand(input) {
         case 'i':
         case 'health':
         case 'h':
-            
             handleSingleWordCommands(command);
             break;
 
@@ -135,7 +129,7 @@ function updateGameState() {
     }
 }
 
-
+// Function to attack the current enemy
 function attackEnemy() {
     const currentEnemy = player.currentRoom.enemies[0]; // Assume attacking the first enemy in the room
     if (currentEnemy) {
@@ -152,7 +146,7 @@ function attackEnemy() {
     }
 }
 
-
+// Function to run away from the current room
 function runAway() {
     const availableDirections = player.currentRoom.getExits();
     if (availableDirections.length > 0) {
@@ -172,9 +166,6 @@ function runAway() {
     }
 }
 
-
-
-
 // Toggle visibility of combat buttons based on game state
 function toggleCombatButtons() {
     const combatButtons = document.getElementById('combat-buttons');
@@ -189,7 +180,11 @@ Room.prototype.printRoom = function () {
     outputText(`<strong>${this.name}</strong>`);
     outputText(this.description);
     if (this.items.length > 0) {
-        outputText(`Items: ${this.items.map(item => item.name).join(", ")}`);
+        const itemDescriptions = this.items.map(item => `a ${item.name.toLowerCase()}`);
+        const itemText = itemDescriptions.length > 1 ? itemDescriptions.join(", and ") : itemDescriptions[0];
+        outputText(`There is ${itemText} in this room. Type 'take <item>' to pick it up.`);
+    } else {
+        outputText("There are no items in this room.");
     }
     outputText(this.getExitsString());
 };

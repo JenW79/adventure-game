@@ -17,50 +17,54 @@
             overflow-y: auto;
             border: 1px solid #ccc;
             padding: 10px;
+            margin-bottom: 10px;
             background-color: #fff;
-            margin-bottom: 10px;
         }
-        #input-area {
+        #controls, #combat-buttons, #action-buttons {
+            margin-top: 10px;
             display: flex;
-            margin-bottom: 10px;
-        }
-        #input {
-            flex-grow: 1;
-            padding: 10px;
-            font-size: 16px;
-            margin-right: 5px;
-        }
-        #submit-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #combat-buttons {
-            display: none; /* Hide buttons initially */
+            flex-wrap: wrap;
+            gap: 10px;
         }
         button {
             padding: 10px;
-            margin-right: 5px;
+            flex: 1 1 45%; /* Adjust button size */
             font-size: 16px;
-            cursor: pointer;
+        }
+        @media (max-width: 600px) {
+            button {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <h1>Welcome to Adventure!</h1>
     <div id="output"></div>
-    <div id="input-area">
-        <input type="text" id="input" placeholder="Enter command..." autofocus>
-        <button id="submit-button" onclick="submitCommand()">Enter</button>
+    <div id="controls">
+        <button onclick="processCommand('n')">Go North</button>
+        <button onclick="processCommand('s')">Go South</button>
+        <button onclick="processCommand('e')">Go East</button>
+        <button onclick="processCommand('w')">Go West</button>
+        <button onclick="processCommand('l')">Look Around</button>
+        <button onclick="processCommand('i')">Inventory</button>
+        <button onclick="processCommand('health')">Check Health</button>
+    </div>
+    <div id="action-buttons">
+        <button onclick="processCommand('take')">Take Item</button>
+        <button onclick="processCommand('drop')">Drop Item</button>
+        <button onclick="processCommand('eat')">Eat Item</button>
     </div>
     <div id="combat-buttons">
         <button id="attack-button">Attack</button>
         <button id="run-button">Run Away</button>
     </div>
+    <input type="text" id="input" placeholder="Enter command..." autofocus>
     <button onclick="startGame()">Start Game</button>
     <script type="module" src="game.js"></script>
 </body>
 </html>
+
 
 
 
