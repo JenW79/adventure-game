@@ -86,17 +86,18 @@ export class Player extends Character {
   }
 
   eatItem(itemName) {
-    const item = this.getItemByName(itemName);
-
-    if (!item) {
-      outputText(`You do not have ${itemName}`);
-    } else if (!(item instanceof Food)) {
-      outputText(`You cannot eat ${item.name}`);
-      this.items.push(item); // Ensure non-food items are kept
+    const itemIndex = this.items.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
+    if (itemIndex !== -1) {
+      const item = this.items[itemIndex];
+      if (item instanceof Food) {
+        this.items.splice(itemIndex, 1); // Remove the food item from inventory
+        this.health += item.healthValue || 10; // Increase health by item's health value or default to 10
+        outputText(`You ate ${item.name}. Your health is now ${this.health}.`);
+      } else {
+        outputText(`${item.name} is not food and cannot be eaten.`);
+      }
     } else {
-      outputText(`You ate ${item.name}`);
-      this.health += item.healthValue || 10;
-      outputText(`Your health is now ${this.health}`);
+      outputText(`You do not have ${itemName} in your inventory.`);
     }
   }
 

@@ -1,8 +1,9 @@
-
 import { Player } from './class/player.js';
 import { Enemy } from './class/enemy.js';
 import { World } from './class/world.js';
 import { Room } from './class/room.js'; 
+import { Food } from './class/food.js';
+
 import { outputText } from './class/utils.js';
 
 import worldData from './world-data.js';
@@ -19,7 +20,7 @@ function startGame() {
             event.target.value = '';
         }
     });
-    
+
     // Set up combat buttons
     document.getElementById('attack-button').addEventListener('click', () => attackEnemy());
     document.getElementById('run-button').addEventListener('click', () => runAway());
@@ -42,9 +43,11 @@ function startGame() {
     printHelp();
 }
 
-
-// Make the startGame function available globally
+// Make functions available globally
 window.startGame = startGame;
+window.takeSelectedItem = takeSelectedItem;
+window.dropSelectedItem = dropSelectedItem;
+window.eatSelectedItem = eatSelectedItem;
 
 // Modify this function to display the help text in the HTML output
 function printHelp() {
@@ -121,11 +124,71 @@ function handleItemCommands(command, argument) {
 
 function updateGameState() {
     toggleCombatButtons();
+    updateItemSelectors();
     if (player.health <= 0) {
         player.die();
     }
     if (player.currentRoom.enemies.length > 0) {
         player.currentRoom.enemies.forEach(enemy => enemy.flushMessages());
+    }
+}
+
+// Populate dropdowns with items in the current room and player's inventory
+function updateItemSelectors() {
+    const takeItemSelect = document.getElementById('take-item-select');
+    const dropItemSelect = document.getElementById('drop-item-select');
+    const eatItemSelect = document.getElementById('eat-item-select');
+
+    takeItemSelect.innerHTML = '';
+    dropItemSelect.innerHTML = '';
+    eatItemSelect.innerHTML = '';
+
+    player.currentRoom.items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.name;
+        option.text = item.name;
+        takeItemSelect.add(option);
+    });
+
+    player.items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.name;
+        option.text = item.name;
+        dropItemSelect.add(option);
+
+        if (item instanceof Food) {
+            const eatOption = document.createElement('option');
+            eatOption.value = item.name;
+            eatOption.text = item.name;
+            eatItemSelect.add(eatOption);
+        }
+    });
+}
+
+function takeSelectedItem() {
+    const selectedItem = document.getElementById('take-item-select').value;
+    if (selectedItem) {
+        player.takeItem(selectedItem);
+    } else {
+        outputText("There is no item selected to take.");
+    }
+}
+
+function dropSelectedItem() {
+    const selectedItem = document.getElementById('drop-item-select').value;
+    if (selectedItem) {
+        player.dropItem(selectedItem);
+    } else {
+        outputText("There is no item selected to drop.");
+    }
+}
+
+function eatSelectedItem() {
+    const selectedItem = document.getElementById('eat-item-select').value;
+    if (selectedItem) {
+        player.eatItem(selectedItem);
+    } else {
+        outputText("There is no item selected to eat.");
     }
 }
 
@@ -191,3 +254,5 @@ Room.prototype.printRoom = function () {
 
 // Start the game automatically on page load
 window.onload = startGame;
+
+

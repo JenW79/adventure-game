@@ -36,7 +36,7 @@ export default {
     {
       name: "Rock",
       description: "A sturdy rock",
-      room: 1,
+      room: 4,
       isWeapon: true,
       damage: 6
     },
@@ -49,7 +49,7 @@ export default {
     {
       name: "Sword",
       description: "A sharp sword",
-      room: 3,
+      room: 1,
       isWeapon: true,
       damage: 15
     }

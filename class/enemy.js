@@ -9,7 +9,7 @@ export class Enemy extends Character {
     this.messageBuffer = [];
     this.hasMetPlayer = false;
     this.baseDamage = 5;
-    this.respawnTime = 50000; //5 min respawn time
+    this.respawnTime = 15000; //15 sec respawn time
   }
 
   setPlayer(player) {
@@ -87,16 +87,21 @@ export class Enemy extends Character {
 
   respawn() {
     setTimeout(() => {
-      this.health = 100; // Reset health
-      this.currentRoom = this.player.currentRoom; // Respawn in the player's current room
-      this.messageBuffer.push(`${this.name} has appeared in the ${this.currentRoom.name}.`);
-      toggleCombatButtons(); // Ensure buttons are updated when enemy respawns
+        this.health = 100; // Reset health
+        // Respawn in a random room instead of the player's current room
+        const randomRoomIndex = Math.floor(Math.random() * Object.keys(this.player.currentRoom.world.rooms).length);
+        const randomRoom = this.player.currentRoom.world.rooms[randomRoomIndex + 1]; // Assuming rooms are indexed from 1
+
+        this.currentRoom = randomRoom;
+        this.currentRoom.addEnemy(this); // Add goblin back to the room's enemy list
+        this.messageBuffer.push(`${this.name} has appeared in the ${this.currentRoom.name}.`);
+        toggleCombatButtons(); // Ensure buttons are updated when enemy respawns
     }, this.respawnTime);
-  }
+}
 
   tryToStealSandwich() {
     const sandwich = this.player.getItemByName('sandwich');
-    const shouldSteal = Math.random() < 0.5; // 50% chance to steal
+    const shouldSteal = Math.random() < 0.4; // 40% chance to steal
 
     if (sandwich && shouldSteal) {
       this.health += 5; // Heal the goblin by 5 HP

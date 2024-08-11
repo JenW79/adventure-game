@@ -64,16 +64,21 @@ export class Room {
     if (!this.hasGenerated) {
       this.hasGenerated = true;
 
-      // Randomly add items
-      if (Math.random() < 0.5) this.addItem(new Item("Rock", "A sturdy rock"));
-      if (Math.random() < 0.3) this.addItem(new Food("Sandwich", "A tasty looking sandwich"));
-      if (Math.random() < 0.4) this.addItem(new Weapon("Sword", "A sharp sword", 15));
+      if (!this.getItemByName("Rock") && Math.random() < 0.5) {
+        this.addItem(new Item("Rock", "A sturdy rock"));
+    }
+    if (!this.getItemByName("Sandwich") && Math.random() < 0.3) {
+        this.addItem(new Food("Sandwich", "A tasty looking sandwich"));
+    }
+    if (!this.getItemByName("Sword") && Math.random() < 0.4) {
+        this.addItem(new Weapon("Sword", "A sharp sword", 15));
+    }
 
-      // Randomly add enemies
-      if (Math.random() < 0.5) {
+    // Randomly add enemies
+    if (!this.enemies.find(enemy => enemy.name === "Goblin") && Math.random() < 0.5) {
         const goblin = new Enemy("Goblin", "A sneaky goblin", this);
         this.addEnemy(goblin);
-      }
+     }
     }
   }
 

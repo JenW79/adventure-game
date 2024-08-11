@@ -31,8 +31,13 @@
             flex: 1 1 45%; /* Adjust button size */
             font-size: 16px;
         }
+        select {
+            padding: 10px;
+            flex: 1 1 45%;
+            font-size: 16px;
+        }
         @media (max-width: 600px) {
-            button {
+            button, select {
                 font-size: 14px;
             }
         }
@@ -51,9 +56,14 @@
         <button onclick="processCommand('health')">Check Health</button>
     </div>
     <div id="action-buttons">
-        <button onclick="processCommand('take')">Take Item</button>
-        <button onclick="processCommand('drop')">Drop Item</button>
-        <button onclick="processCommand('eat')">Eat Item</button>
+        <button onclick="takeSelectedItem()">Take Item</button>
+        <select id="take-item-select"></select>
+
+        <button onclick="dropSelectedItem()">Drop Item</button>
+        <select id="drop-item-select"></select>
+
+        <button onclick="eatSelectedItem()">Eat Item</button>
+        <select id="eat-item-select"></select>
     </div>
     <div id="combat-buttons">
         <button id="attack-button">Attack</button>
@@ -64,6 +74,7 @@
     <script type="module" src="game.js"></script>
 </body>
 </html>
+
 
 
 
