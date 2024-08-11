@@ -7,8 +7,13 @@ export class Player extends Character {
   constructor(name, startingRoom) {
     super(name, "Player character", startingRoom);
     this.items = [];
+    this.health = 100
     this.punchDamage = 5; // Base punch damage
     this.maxItems = 10;
+  }
+    
+  checkHealth() {
+    outputText(`Your current health is ${this.health}.`);
   }
 
   move(direction) {
