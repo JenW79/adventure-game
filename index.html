@@ -17,29 +17,42 @@
             overflow-y: auto;
             border: 1px solid #ccc;
             padding: 10px;
-            margin-bottom: 10px;
             background-color: #fff;
+            margin-bottom: 10px;
+        }
+        #input-area {
+            display: flex;
+            margin-bottom: 10px;
         }
         #input {
-            width: calc(100% - 22px);
+            flex-grow: 1;
             padding: 10px;
             font-size: 16px;
+            margin-right: 5px;
+        }
+        #submit-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
         #combat-buttons {
-            margin-top: 10px;
             display: none; /* Hide buttons initially */
         }
         button {
             padding: 10px;
             margin-right: 5px;
             font-size: 16px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <h1>Welcome to Adventure!</h1>
     <div id="output"></div>
-    <input type="text" id="input" placeholder="Enter command..." autofocus>
+    <div id="input-area">
+        <input type="text" id="input" placeholder="Enter command..." autofocus>
+        <button id="submit-button" onclick="submitCommand()">Enter</button>
+    </div>
     <div id="combat-buttons">
         <button id="attack-button">Attack</button>
         <button id="run-button">Run Away</button>
@@ -48,5 +61,6 @@
     <script type="module" src="game.js"></script>
 </body>
 </html>
+
 
 
