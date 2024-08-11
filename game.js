@@ -60,53 +60,77 @@ function printHelp() {
 }
 
 // Modify processCommand function to work with HTML inputs
-function processCommand(cmd) {
-    cmd = cmd.toLowerCase();
-    switch (true) {
-        case (cmd === 'h'):
-            printHelp();
+function processCommand(input) {
+    const cmd = input.toLowerCase().trim();
+    const parts = cmd.split(/\s+/);
+    const command = parts[0];
+    const argument = parts.slice(1).join(" ");
+
+    switch (command) {
+        // Handling for single-word commands
+        case 'l':
+        case 'i':
+        case 'health':
+        case 'h':
+            
+            handleSingleWordCommands(command);
             break;
-        case (cmd === 'q'):
+
+        // Commands that require an argument
+        case 'take':
+        case 'drop':
+        case 'eat':
+            if (argument) {
+                handleItemCommands(command, argument);
+            } else {
+                outputText(`Please specify an item to ${command}.`);
+            }
+            break;
+
+        // Direction commands
+        case 'n':
+        case 's':
+        case 'e':
+        case 'w':
+            player.move(command);
+            break;
+
+        case 'q':
             outputText("Game over. Thanks for playing!");
-            document.getElementById('input').disabled = true; // Disable input after quitting
+            document.getElementById('input').disabled = true;
             break;
-        case (cmd === 'l'):
-            player.currentRoom.printRoom();
-            break;
-        case (cmd === 'i'):
-            player.printInventory();
-            break;
-        case (cmd === 'health'):
-            player.checkHealth();
-            break;
-        case (['n', 's', 'e', 'w'].includes(cmd)):
-            player.move(cmd);
-            break;
-        case (cmd.startsWith("take ")):
-            let takeItemName = cmd.split(" ")[1];
-            player.takeItem(takeItemName);
-            break;
-        case (cmd.startsWith("drop ")):
-            let dropItemName = cmd.split(" ")[1];
-            player.dropItem(dropItemName);
-            break;
-        case (cmd.startsWith("eat ")):
-            let eatItemName = cmd.split(" ")[1];
-            player.eatItem(eatItemName);
-            break;
+
         default:
             outputText("Invalid command. Type 'h' for help.");
+            break;
     }
 
-    // Show combat buttons if there are enemies in the room
-    toggleCombatButtons();
+    updateGameState();
+}
 
-    // Check player's health
+function handleSingleWordCommands(command) {
+    switch (command) {
+        case 'l': player.currentRoom.printRoom(); break;
+        case 'i': player.printInventory(); break;
+        case 'health': player.checkHealth(); break;
+        case 'h': printHelp(); break;
+    }
+}
+
+function handleItemCommands(command, argument) {
+    switch (command) {
+        case 'take': player.takeItem(argument); break;
+        case 'drop': player.dropItem(argument); break;
+        case 'eat': player.eatItem(argument); break;
+    }
+}
+
+function updateGameState() {
+    toggleCombatButtons();
     if (player.health <= 0) {
         player.die();
     }
-
-    if (player.currentRoom.enemies && player.currentRoom.enemies.length > 0) {
+    if (player.currentRoom.enemies.length > 0) {
         player.currentRoom.enemies.forEach(enemy => enemy.flushMessages());
     }
 }
@@ -157,6 +181,8 @@ function toggleCombatButtons() {
     const hasEnemies = player.currentRoom.enemies && player.currentRoom.enemies.length > 0;
     combatButtons.style.display = hasEnemies ? 'block' : 'none';
 }
+
+window.processCommand = processCommand;
 
 // Override room's printRoom to use HTML
 Room.prototype.printRoom = function () {
