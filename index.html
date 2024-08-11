@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        #output {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fff;
+        }
+        #input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            font-size: 16px;
+        }
+        #combat-buttons {
+            margin-top: 10px;
+            display: none; /* Hide buttons initially */
+        }
+        button {
+            padding: 10px;
+            margin-right: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Adventure!</h1>
+    <div id="output"></div>
+    <input type="text" id="input" placeholder="Enter command..." autofocus>
+    <div id="combat-buttons">
+        <button id="attack-button">Attack</button>
+        <button id="run-button">Run Away</button>
+    </div>
+    <button onclick="startGame()">Start Game</button>
+    <script type="module" src="game.js"></script>
+</body>
+</html>
+
+
